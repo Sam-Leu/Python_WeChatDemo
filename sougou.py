@@ -6,7 +6,7 @@ driver_sougou = webdriver.Chrome()
 
 #driver_sougou.get("http://weixin.sogou.com/")
 #driver_sougou.find_element_by_xpath('//*[@id="loginBtn"]').click()
-base_url = 'https://mp.weixin.qq.com/'
+base_url = 'https://mp.weixin.qq.com'
 
 
 def get_url_list():
@@ -22,26 +22,18 @@ def get_url_list():
     init_url = link.get_attribute('href')
     driver_sougou.get(init_url)     #get公众号详情页面
 
-    print(driver_sougou.current_url)
-    print(driver_sougou.page_source)
-    html = driver_sougou.page_source
-    doc = pq(html)
-    items = doc('#weui_msg_card_list .weui_msg_card_bd .weui_media_box appmsg').items()
-
-
+    #print(driver_sougou.current_url)
+    #print(driver_sougou.page_source)
+    items = driver_sougou.find_elements_by_xpath('//*[@class="weui_media_bd"]/h4')      #获取所有推文的链接
+    url_list = []
     for item in items:
-        print('2')
-        temp_url = item.find('.weui_media_title').attr('hrefs')
-        url_list = {
-            'url':base_url + temp_url
-        }
-        print(url_list)
+        temp_url = item.get_attribute("hrefs")
+        url_list.append(base_url + temp_url)
+
+    print(url_list)
 
     time.sleep(3)
     driver_sougou.close()
-
-
-
 
 
 if __name__ == '__main__':
