@@ -40,7 +40,7 @@ class Spider:
 
     def get_url(self):
 
-        self.log(u'公众号微信号为：%s' % self.wechat_id)
+        self.log(u'公众号为：%s' % self.wechat_id)
 
         search_html = self.session.get(self.search_url,headers=self.headers, timeout=self.timeout).content
 
@@ -81,15 +81,20 @@ class Spider:
                     self.log(u'标题： %s' % title)
 
                     # 创建标题前五个字命名的文件夹
-                    if not os.path.exists(title[:10]):
-                        os.makedirs(title[:10])
-                    path = os.getcwd()+ '/' + title[:10] +'/'
-                    print(path)
+                    # if not os.path.exists(title[:10]):
+                    #     os.makedirs(title[:10])
+                    # path = os.getcwd()+ '/' + title[:10] +'/'
+                    # print(path)
 
 
                     # 获取文章发表时间
                     # date = article('.weui_media_extra_info').text().strip()
-                    date = article('p[class="weui_media_extra_info"]').text().strip()
+                    # date = article('p[class="weui_media_extra_info"]').text().strip()
+                    temp_date = article('p[class="weui_media_extra_info"]').text().strip()
+                    if temp_date.endswith("原创"):
+                        date = temp_date.replace('原创','')
+                    else:
+                        date = temp_date
                     self.log(u'发表时间： %s' % date)
 
                     # 获取标题对应的地址
@@ -104,11 +109,14 @@ class Spider:
                     if len(rs) > 0:
                         pic = rs[0].replace('(', '')
                         pic = pic.replace(')', '')
-                        self.log(u'封面图片：%s ' % pic)
+                        #self.log(u'封面图片：%s ' % pic)
 
                     # 获取正文内容
-                    content = self.get_atticle_info(article_url)
-                    print(content)
+                    if title != "分享图片":
+                        content = self.get_atticle_info(article_url)
+                    else:
+                        content = "NULL"
+                    #print(content)
                     time.sleep(1)
 
                     # 获取文章图片
@@ -128,19 +136,22 @@ class Spider:
                         # fp = open(path+img_url[-15:],'wb')
                         # fp.write(data.content)
                         # fp.close()
-                    print(imgs)
+                    # print(imgs)
 
                     # 获取html代码
                     html = requests.get(article_url)
                     html.encoding = 'utf-8'
 
                     # 保存数据到数据库
-                    sql = 'INSERT INTO article(date,title,wechat_id,url,cover_img,content,img,html) values(%s, %s, %s, %s, %s, %s, %s, %s)'
+                    sql = 'INSERT INTO wechat_article(publish_date,article_title,wechat_id,article_url,cover_img,article_content,article_img,article_html) values(%s, %s, %s, %s, %s, %s, %s, %s)'
+
                     try:
                         cursor.execute(sql,(date, title, self.wechat_id, article_url, pic, content, imgs[0], html.text))
                         db.commit()
+                        self.log(u'入库成功')
                     except:
                         db.rollback()
+                        self.log(u'入库不成功')
 
                     time.sleep(1)
 
@@ -152,11 +163,12 @@ class Spider:
         :return:
         '''
         html = requests.get(url,headers=self.headers)
-        soup = BeautifulSoup(html.text,'lxml')
+        soup = BeautifulSoup(html.text,"lxml")
         content = soup.find('div', id='img-content')
 
         p_list = []
         ps = content.find_all('p')
+
         for i in ps:
             x = i.get_text()
             p_list.append(x)
@@ -181,16 +193,11 @@ class Spider:
                 imgs.append(img)
         return imgs
 
-    def save_in_sql(self):
-        return
-
-
 if __name__ == '__main__':
 
-    db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
-    cursor = db.cursor()
-    Spider("python6359").get_url()
-    db.close()
-
-
-
+    ids = ['莞工青年','python']
+    for id in ids:
+        db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
+        cursor = db.cursor()
+        Spider(id).get_url()
+        db.close()

@@ -19,10 +19,9 @@ def create_tables():
     '''
     db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
     cursor = db.cursor()
-    sql = 'CREATE TABLE IF NOT EXISTS article(id MEDIUMINT UNSIGNED AUTO_INCREMENT,date TEXT NOT NULL,title VARCHAR(100) NOT NULL,wechat_id VARCHAR(20) NOT NULL,url TEXT NOT NULL,cover_img TEXT NOT NULL,content TEXT NOT NULL,img TEXT NOT NULL,html MEDIUMTEXT NOT NULL,PRIMARY KEY (id))'
+    sql = 'CREATE TABLE IF NOT EXISTS wechat_article(id INT UNSIGNED AUTO_INCREMENT,publish_date VARCHAR(20) NOT NULL,article_title VARCHAR(200) NOT NULL,wechat_id VARCHAR(20) NOT NULL,article_url TEXT NOT NULL,cover_img TEXT NOT NULL,article_content TEXT,article_img TEXT,article_html MEDIUMTEXT NOT NULL,PRIMARY KEY (id))'
     cursor.execute(sql)
     db.close()
-
 
 if __name__ == '__main__':
 

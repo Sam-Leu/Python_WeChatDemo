@@ -40,7 +40,7 @@ def get_account():
         p = Pinyin()
         print("==========")
         #print(p.get_pinyin(type))
-        print("正在爬取类别：%s",type)
+        print("正在爬取类别：",type)
         print("==========")
         infos = selector.xpath('//tbody[@class="ant-table-tbody"]/tr')
 
@@ -62,4 +62,4 @@ if __name__ == '__main__':
 
     lisys = get_account()
 
-    print(lisys[0][0])
+    print(lisys[0])

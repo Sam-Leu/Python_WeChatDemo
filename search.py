@@ -31,7 +31,7 @@ def search_infos(key_words):
     words = cut_word(key_words)     # 调用分词函数
     infos = []                      # 外层列表，存储检索到的每条推文信息的子列表
     for word in words:
-        sql = "SELECT id, title FROM article WHERE title LIKE '%" + word + "%'"
+        sql = "SELECT id, article_title FROM wechat_article WHERE article_title LIKE '%" + word + "%'"
         cursor.execute(sql)
         datas = cursor.fetchall()       # 查找所有符合条件的数据
 
@@ -52,6 +52,6 @@ if __name__ == '__main__':
 
     db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
     cursor = db.cursor()
-    words = 'goole杀了500个GitHub爬虫程序员脚本祭天！'
+    words = 'goole杀了500个官宣GitHub苹果爬虫程序员脚本祭天！'
     search_infos(words)
     db.close()
