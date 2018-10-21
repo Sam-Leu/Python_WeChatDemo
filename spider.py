@@ -5,7 +5,6 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import requests
 import pymysql
-import string
 import time
 import re
 import os
@@ -113,14 +112,11 @@ class Spider:
                         #self.log(u'封面图片：%s ' % pic)
 
                     # 获取正文内容
-                    if title == "分享图片":
+                    if title == "分享图片":     # 判断文章是否是为分享图片的类型
                         content = "shareImg"
                     else:
                         content = self.get_atticle_info(article_url)
-                        temp_content = content.replace("\n", "")
-                    cont = "分享一篇文章"
-                    if content.startswith(" "):
-                        content == "shareArticle"
+
                     #print(content)
 
                     # 获取文章图片
@@ -148,16 +144,17 @@ class Spider:
 
                     # 保存数据到数据库
                     sql = 'INSERT INTO wechat_article(publish_date,article_title,wechat_id,article_url,cover_img,article_content,article_img,article_html) values(%s, %s, %s, %s, %s, %s, %s, %s)'
+                    # 推文为分享其他文章则不入库
+                    if content != 'shareArticle':
+                        try:
+                            cursor.execute(sql,(date, title, self.wechat_id, article_url, pic, content, imgs[0], html.text))
+                            db.commit()
+                            self.log(u'入库成功')
+                        except:
+                            db.rollback()
+                            self.log(u'入库不成功')
 
-                    try:
-                        cursor.execute(sql,(date, title, self.wechat_id, article_url, pic, content, imgs[0], html.text))
-                        db.commit()
-                        self.log(u'入库成功')
-                    except:
-                        db.rollback()
-                        self.log(u'入库不成功')
-
-                    time.sleep(1)
+                    #time.sleep(1)
 
 
     def get_atticle_info(self,url):
@@ -175,6 +172,8 @@ class Spider:
 
         for i in ps:
             x = i.get_text()
+            if '分享一篇文章' in x:       # 判断文章是否为分享其他文章的类型
+                return 'shareArticle'
             p_list.append(x)
 
         main_content = '\n'.join(p_list)
@@ -205,3 +204,4 @@ if __name__ == '__main__':
         cursor = db.cursor()
         Spider(id).get_url()
         db.close()
+    Spider.log("爬虫已完成任务")
