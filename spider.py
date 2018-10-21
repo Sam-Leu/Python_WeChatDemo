@@ -5,6 +5,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import requests
 import pymysql
+import string
 import time
 import re
 import os
@@ -36,7 +37,7 @@ class Spider:
         :param msg: 日志信息
         :return:
         '''
-        print(u'%s: %s' % (time.strftime('%Y-%m-%d %H-%M-%S'), msg))
+        print(u'%s: %s' % (time.strftime('%Y-%m-%d %H:%M:%S'), msg))
 
     def get_url(self):
 
@@ -52,7 +53,7 @@ class Spider:
         # 获取html
         browser = webdriver.Chrome()
         browser.get(wechat_url)
-        time.sleep(3)
+        time.sleep(2)
         wechat_html = browser.execute_script("return document.documentElement.outerHTML")
         browser.close()
 
@@ -112,12 +113,15 @@ class Spider:
                         #self.log(u'封面图片：%s ' % pic)
 
                     # 获取正文内容
-                    if title != "分享图片":
-                        content = self.get_atticle_info(article_url)
+                    if title == "分享图片":
+                        content = "shareImg"
                     else:
-                        content = "NULL"
+                        content = self.get_atticle_info(article_url)
+                        temp_content = content.replace("\n", "")
+                    cont = "分享一篇文章"
+                    if content.startswith(" "):
+                        content == "shareArticle"
                     #print(content)
-                    time.sleep(1)
 
                     # 获取文章图片
                     imgs = self.get_article_img(article_url)
@@ -195,7 +199,7 @@ class Spider:
 
 if __name__ == '__main__':
 
-    ids = ['莞工青年','python']
+    ids = ['莞工青年', '占豪', '新华社', '央视新闻']
     for id in ids:
         db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
         cursor = db.cursor()
