@@ -104,7 +104,12 @@ class Spider:
                         self.log(u'发表时间： %s' % date)
 
                         # 获取标题对应的地址
-                        article_url = 'http://mp.weixin.qq.com' + article('h4[class="weui_media_title"]').attr('hrefs')
+                        temp_url = article('h4[class="weui_media_title"]').attr('hrefs')
+                        # 存在某些推文的临时链接为完整链接，判断是否需要拼接
+                        if temp_url.startswith('http://mp.weixin.qq.com'):
+                            article_url = temp_url
+                        else:
+                            article_url = 'http://mp.weixin.qq.com' + temp_url
                         self.log(u'地址： %s' % article_url)
 
                         # 获取封面图片
@@ -119,7 +124,7 @@ class Spider:
 
                         # 获取正文内容
                         if title == "分享图片":     # 判断文章是否是为分享图片的类型
-                            content = "shareImg"
+                            content = "null"
                         else:
                             content = self.get_atticle_info(article_url)
 
@@ -151,7 +156,7 @@ class Spider:
                         # 保存数据到数据库
                         sql = 'INSERT INTO wechat_article(publish_date,article_title,wechat_id,article_url,cover_img,article_content,article_img,article_html) values(%s, %s, %s, %s, %s, %s, %s, %s)'
                         # 推文为分享其他文章则不入库
-                        if content != 'shareArticle':
+                        if content != 'null':
                             try:
                                 self.cursor.execute(sql,(date, title, wechat_id, article_url, pic, content, imgs[0], html.text))
                                 self.db.commit()
@@ -163,6 +168,7 @@ class Spider:
                         #time.sleep(1)
 
         self.db.close()
+        Spider.log("爬虫已完成任务 %s" % wechat_id[-1])
 
     def get_atticle_info(self,url):
         '''
@@ -173,14 +179,19 @@ class Spider:
         html = requests.get(url,headers=self.headers)
         soup = BeautifulSoup(html.text,"lxml")
         content = soup.find('div', id='img-content')
+        temp_contents = re.findall('此(.*?)无法查看', html.text, re.S)
+
+        if len(temp_contents) > 0:
+            if '内容因违规' in temp_contents[0]:
+                return 'null'
 
         p_list = []
-        ps = content.find_all('p')
 
+        ps = content.find_all('p')
         for i in ps:
             x = i.get_text()
             if '分享一篇文章' in x:       # 判断文章是否为分享其他文章的类型
-                return 'shareArticle'
+                return 'null'
             p_list.append(x)
 
         main_content = '\n'.join(p_list)
@@ -205,8 +216,7 @@ class Spider:
 
 if __name__ == '__main__':
 
-    ids = ['莞工青年', '占豪', '新华社', '央视新闻']
+    ids = [ 'AppSo', '互联网思维', '腾讯科技', '运营商头条', '新智元', '大数据文摘', '科技最前线', '最黑科技', '钱皓频道', '制造原理']
 
     Spider(ids).get_infos()
 
-    Spider.log("爬虫已完成任务")

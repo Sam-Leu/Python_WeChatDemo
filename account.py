@@ -32,7 +32,7 @@ def get_account():
     types = [news, technlg, car, house, job, finance, life, inspire, female, travel, sport, cate, fun, star, infant,
              education, startup, governm, company, local]
 
-    for category in range(1,5):
+    for category in range(1,21):
         url = 'https://data.wxb.com/rank?category='+str(category)+'&page=1'
         html = requests.get(url,headers=headers)
         selector = etree.HTML(html.text)
@@ -62,4 +62,8 @@ if __name__ == '__main__':
 
     lisys = get_account()
 
-    print(lisys[0])
+    for list in lisys:
+        print(list)
+        print("\n")
+
+    print('ok')
