@@ -60,7 +60,7 @@ class Search:
             if len(datas) > 0:
 
                 for data in datas:
-                    temp_word = '<strong>' + word + '</strong>'  # 添加html标签
+                    temp_word = '<font color="red">' + word + '</font>'  # 添加html标签
                     new_data = []                                       # 每条推文信息的子列表
                     new_data.append(data[0])                            # 主键id
                     new_data.append(data[1].replace(word, temp_word))   # 标题
@@ -73,5 +73,5 @@ class Search:
 
 if __name__ == '__main__':
 
-    words = 'goole杀了500个2019年官宣GitHub苹果爬虫程序员脚本祭天！'
+    words = 'goole杀了500个2019年GitHub微软苹果科技脚本爬虫程序员祭天！'
     Search(words).search_infos()
