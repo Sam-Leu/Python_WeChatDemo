@@ -30,3 +30,4 @@
 	except:  
 	    return "null"                   #异常则返回null  
 
+4.Test文件夹的文件为测试代码
