@@ -175,7 +175,7 @@ class Spider:
                         #time.sleep(1)
 
         self.db.close()
-        Spider.log("爬虫已完成任务 %s" % wechat_id[-1])
+        Spider.log("%s",'爬虫已完成任务 ')
 
     def get_atticle_info(self,url):
         '''
@@ -199,13 +199,13 @@ class Spider:
             ps = content.find_all('p')
             for i in ps:
                 x = i.get_text()
-                if '分享一篇文章' in x:       # 判断文章是否为分享其他文章的类型
-                    return 'null'
+                # if '分享一篇文章' in x:       # 判断文章是否为分享其他文章的类型
+                #     return 'null'
                 p_list.append(x)
 
             main_content = '\n'.join(p_list)
         except:
-            return "null"
+            return "null"                   #异常则返回null
 
         return main_content
 
@@ -227,7 +227,7 @@ class Spider:
 
 if __name__ == '__main__':
 
-    ids = [ 'AppSo', '互联网思维', '腾讯科技', '运营商头条', '新智元', '大数据文摘', '科技最前线', '最黑科技', '钱皓频道', '制造原理']
+    ids = [ '莞工青年', '腾讯科技', '运营商头条', '新智元', '大数据文摘', '科技最前线', '最黑科技', '钱皓频道', '制造原理']
 
     Spider(ids).get_infos()
 
