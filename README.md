@@ -1,4 +1,4 @@
-
+# WeChatDemo
 ### Debug 2.0
 
 在spider.py的基础上更新了如下内容,并保存为spider2.0.py：  
@@ -34,7 +34,7 @@
 
 ### Debug 2.1
 
-在spider2.0.py的基础上更新了如下内容，保存文件不变： 
+在spider2.0.py的基础上更新了如下内容，保存文件不变：   
 1.增加了重复数据不插入数据库的代码，采用的方法是在原数据库的基础上关于publish_date,article_title建立唯一索引，建立了唯一索引后数据入库时会自动判断是否有重复数据：  
 
 	def create_index():  
@@ -49,4 +49,5 @@
 	    db.close()  
 	    log('unique_index索引已创建好')  
 	    
-2.优化了数据库操作的部分代码
+2.优化了数据库操作的部分代码  
+3.将老版本移至Older Version文件夹管理
