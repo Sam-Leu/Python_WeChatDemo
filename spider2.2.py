@@ -154,6 +154,7 @@ class Spider:
                         temp_html.encoding = 'utf-8'
                         data = temp_html.text
                         html = re.sub(pattern='data-src', repl='src', string=data)
+                        html = re.sub(pattern='<head>', repl='<head><meta name="referrer" content="never">', string=html)
 
                         # html写入项目当前目录的HTML文件夹，文件名为标题前10个字，需要使用可删除注释
                         # f = open('HTML/'+title[:10]+'.html', 'a+')
