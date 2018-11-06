@@ -2,6 +2,7 @@
 
 import time
 import jieba
+import sqlite3
 import pymysql
 
 class Search:
@@ -15,7 +16,7 @@ class Search:
         self.words = words
 
         # 连接数据库
-        self.db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='bee_database')
+        self.db = sqlite3.connect('bee-database.db')
         self.cursor = self.db.cursor()
 
     def log(self,msg):
