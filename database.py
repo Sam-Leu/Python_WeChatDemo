@@ -18,9 +18,9 @@ def create_databases():
     '''
     db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306)
     cursor = db.cursor()
-    cursor.execute("CREATE DATABASE spider DEFAULT CHARACTER SET UTF8MB4")
+    cursor.execute("CREATE DATABASE bee_database DEFAULT CHARACTER SET UTF8MB4")
     db.close()
-    log('spider数据库已创建好')
+    log('bee_database数据库已创建好')
 
 
 def create_tables():
@@ -28,7 +28,7 @@ def create_tables():
     创建表
     :return:
     '''
-    db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
+    db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='bee_database')
     cursor = db.cursor()
     sql = 'CREATE TABLE IF NOT EXISTS wechat_article(id INT UNSIGNED AUTO_INCREMENT,publish_date VARCHAR(20) NOT NULL,article_title VARCHAR(200) NOT NULL,wechat_id VARCHAR(20) NOT NULL,article_url TEXT NOT NULL,cover_img TEXT NOT NULL,article_content TEXT,article_img TEXT,article_html MEDIUMTEXT NOT NULL,PRIMARY KEY (id))'
     cursor.execute(sql)
@@ -41,7 +41,7 @@ def create_index():
     创建唯一索引
     :return:
     '''
-    db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
+    db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='bee_database')
     cursor = db.cursor()
     sql = 'CREATE UNIQUE INDEX unique_index ON wechat_article (publish_date,article_title)'
     cursor.execute(sql)
@@ -53,21 +53,21 @@ def delete_database():
     删除数据库
     :return:
     '''
-    db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
+    db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='bee_database')
     cursor = db.cursor()
-    sql = 'DROP DATABASE spider'
-    confirm = input('确定删除spider数据库？Y/N')
+    sql = 'DROP DATABASE bee_database'
+    confirm = input('确定删除bee_database数据库？Y/N:')
     while 1:
         if confirm == 'Y':
             cursor.execute(sql)
-            log('spider数据库已删除')
+            log('bee_database数据库已删除')
             return
         elif confirm == 'N':
-            log('取消删除spider数据库')
+            log('取消删除bee_database数据库')
             return
         else:
             log('输入有误！')
-            confirm = input('确定删除spider数据库？Y/N')
+            confirm = input('确定删除bee_database数据库？Y/N:')
     db.close()
 
 def delete_table():
@@ -75,10 +75,10 @@ def delete_table():
     删除表
     :return:
     '''
-    db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
+    db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='bee_database')
     cursor = db.cursor()
     sql = 'DROP TABLE wechat_article'
-    confirm = input('确定删除wechat_article表？Y/N')
+    confirm = input('确定删除wechat_article表？Y/N:')
     while 1:
         if confirm == 'Y':
             cursor.execute(sql)
@@ -89,7 +89,7 @@ def delete_table():
             return
         else:
             log('输入有误！')
-            confirm = input('确定删除wechat_article表？Y/N')
+            confirm = input('确定删除wechat_article表？Y/N:')
     db.close()
 
 if __name__ == '__main__':

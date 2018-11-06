@@ -27,7 +27,7 @@ class Spider:
         self.session = requests.Session()
 
         # 连接数据库
-        self.db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='spider')
+        self.db = pymysql.connect(host='localhost', user='root', password='12345678', port=3306, db='bee_database')
         self.cursor = self.db.cursor()
 
 
@@ -43,7 +43,7 @@ class Spider:
 
         for wechat_id in self.wechat_ids:
 
-
+            print('\n')
             self.log(u'公众号为：%s' % wechat_id)
 
             # 搜索url
@@ -175,7 +175,7 @@ class Spider:
                         #time.sleep(1)
 
         self.db.close()
-        Spider.log("%s",'爬虫已完成任务 ')
+        Spider.log("%s",'\n爬虫已完成任务 ')
 
     def get_atticle_info(self,url):
         '''
@@ -227,7 +227,7 @@ class Spider:
 
 if __name__ == '__main__':
 
-    ids = [ '莞工青年', '腾讯科技', '运营商头条', '新智元', '大数据文摘', '科技最前线', '最黑科技', '钱皓频道', '制造原理']
+    ids = [ '莞工青年','Appso', '差评', '腾讯科技', '运营商头条']
 
     Spider(ids).get_infos()
 
