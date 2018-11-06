@@ -99,7 +99,7 @@
 
 ### Debug 2.3
 
-1.增加了SQLite3数据库存储数据的版本，py文件存于WeChat_SQLite文件夹中
+1.增加了SQLite3数据库存储数据的版本，py文件存于WeChat_SQLite文件夹中  
 2.spider2.2.py中增加了反防盗链的代码：
 
 	html = re.sub(pattern='<head>', repl='<head><meta name="referrer" content="never">', string=html)
